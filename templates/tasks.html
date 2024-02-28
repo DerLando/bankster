@@ -1,0 +1,25 @@
+<!-- templates/todos.html -->
+<div id="tasks">
+  <table id = "tasks-content">
+    <tr>
+      <th>name</th>
+      <th>actions</th>
+    </tr>
+          {% for task_header in tasks %}
+          <tr>
+          <td>{{ task_header.name }}</td>
+          <td>
+            <button
+              hx-get="/tasks/{{task_header.id}}"
+              hx-target="#edit-dialog"
+              hx-swap="outerHTML"
+            >Edit</button>
+              </td>
+              </tr>
+          {% endfor %}
+  </table>
+    <p>{{ tasks.len() }} tasks</p>
+  <div id="edit-dialog"></div>
+</div>
+
+

@@ -1,0 +1,16 @@
+<!-- templates/todos.html -->
+<div id="todos">
+  <h2>{{ filter }} todos</h2>
+  <table id = "todos-content">
+    <tr>
+      <th>done</th>
+      <th>description</th>
+      <th>actions</th>
+    </tr>
+          {% for todo in todos %}
+              {% include "todo.html" %}
+          {% endfor %}
+  </table>
+    <p>{{ todos.len() }} todo items</p>
+</div>
+

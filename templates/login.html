@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+<header class="card">
+  <h1>Login</h1>
+</header>
+
+{% endblock %}
+
+{% block content %}
+<main>
+  <div class="card add">
+  <form id="add-form" hx-on::after-request=" if(event.detail.successful) this.reset()">
+  <div class="cb-container">
+      <button hx-post="/todos" hx-trigger="click" hx-target="#todos-content" hx-swap="beforeend">+</button>
+  </div>
+  <div class="txt-container">
+      <input placeholder="Max Mustermann" required type=text name="name" class="txt-input">
+  </div>
+  <div class="txt-container">
+      <input placeholder="example@example.com" required type=text name="email" class="txt-input">
+  </div>
+  <div class="txt-container">
+      <input placeholder="********" required type="password" name="password" class="txt-input">
+  </div>
+  </form>
+  </div>
+</main>
+{% endblock %}
+

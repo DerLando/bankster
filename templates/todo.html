@@ -1,0 +1,30 @@
+<!-- templates/todo.html -->
+<tr id="shuttle-todo-{{ todo.id }}">
+        <td>
+        <input
+            type="checkbox"
+            hx-post="/todos/{{todo.id}}/toggle"
+            hx-trigger="click"
+            hx-target="#shuttle-todo-{{todo.id}}"
+            hx-swap="outerHTML"
+            id="done"
+            {% if todo.done %} checked {% endif %}
+        >
+        </input>
+        </td>
+        <td id="shuttle-todo-desc-{{todo.id}}">
+    {% if todo.done %} <s> {{ todo.name }} </s> {% else %} {{ todo.name }} {% endif %}
+        </td>
+    <td>
+      <button class="outline"
+          aria-invalid="true"
+          hx-delete="/todos/{{todo.id}}"
+          hx-trigger="click"
+          hx-target="#shuttle-todo-{{todo.id}}"
+          hx-swap="delete"
+      >
+          Delete
+      </button>
+    </td>
+</tr>
+

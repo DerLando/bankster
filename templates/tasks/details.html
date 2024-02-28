@@ -1,0 +1,28 @@
+<dialog open id="task-{{ task.id }}">
+  <article>
+    <header>
+      <button aria-label="Close" rel="prev" hx-get="/tasks/all" hx-target="#tasks"hx-swap="outerHTML"></button>
+      <p>
+        <strong>{{ task.name }}</strong>
+      </p>
+    </header>
+    <div class="grid">
+      <div id="content"> 
+        <p>{{ task.description|markdown }}</p>
+      </div>
+      <div id="todos">
+        <ul>
+          {% for todo in task.todos %}
+            <li>{{todo.name}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <footer>
+        <label htmlFor="due">Due</label>
+        <p>{{task.due}}</p>
+    <button>Edit</button>
+    </footer>
+  </article>
+</dialog>
+

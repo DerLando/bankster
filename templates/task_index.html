@@ -1,0 +1,18 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block head %}
+
+<header class="container-fluid">
+  {% include "nav.html" %}
+  <h1>Tasks</h1>
+</header>
+
+{% endblock %}
+
+{% block content %}
+  <div id="tasks" hx-get="/tasks/all" hx-target="this" hx-trigger="load" hx-swap="outerHTML">
+      <span aria-busy="true">Loading...</span>
+  </div>
+{% endblock %}
+

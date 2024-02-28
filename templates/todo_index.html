@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+<header class="card">
+  <h1>TODO</h1>
+  <button id="theme-switcher">
+  ☾☼
+  </button>
+</header>
+
+{% endblock %}
+
+{% block content %}
+<main>
+  <div class="card add">
+  <form id="add-form" hx-on::after-request=" if(event.detail.successful) this.reset()">
+  <div class="cb-container">
+      <button hx-post="/todos" hx-trigger="click" hx-target="#todos-content" hx-swap="beforeend">+</button>
+  </div>
+  <div class="txt-container">
+      <input placeholder="Your todo description..." required type=text name="name" class="txt-input">
+  </div>
+  </form>
+  </div>
+  <div id="list" hx-get="/todos/filter/{{filter}}" hx-target="this" hx-trigger="load" hx-swap="outerHTML">
+      Loading...
+  </div>
+</main>
+{% endblock %}

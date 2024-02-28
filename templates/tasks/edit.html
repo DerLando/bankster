@@ -1,0 +1,31 @@
+<dialog open id="task-{{ task.id }}">
+    <form hx-put="/tasks/{{task.id}}" hx-target="closest dialog" hx-swap="outerHTML">
+  <article>
+    <header>
+      <button aria-label="Close" rel="prev" hx-get="/tasks/all" hx-target="#tasks"hx-swap="outerHTML"></button>
+      <p>
+        <strong>{{ task.name }}</strong>
+      </p>
+    </header>
+    <div class="grid">
+      <div id="content"> 
+        <textarea name="description">{{ task.description }}</textarea>
+        <small>Description in Markdown</small>
+      </div>
+      <div id="todos">
+        <ul>
+          {% for todo in task.todos %}
+            <li>{{todo.name}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <footer>
+        <label htmlFor="due">Due</label>
+        <input type="date" name="due">{{task.due}}</input>
+    <input type="submit" aria-label="Submit edit"></input>
+    </footer>
+  </article>
+    </form>
+</dialog>
+
