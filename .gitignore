@@ -1,1 +1,7 @@
 /target
+
+# Don't push db files...
+*.db
+
+# No secrets please
+.env
