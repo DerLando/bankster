@@ -30,9 +30,29 @@ pub struct CreateTodo {
 }
 
 #[derive(serde::Deserialize, serde::Serialize, Default, Debug)]
+pub struct UpdateTodoRaw {
+    pub name: Option<String>,
+    pub done: Option<String>,
+}
+
+#[derive(serde::Deserialize, serde::Serialize, Default, Debug)]
 pub struct UpdateTodo {
-    pub name: String,
+    pub name: Option<String>,
     pub done: bool,
+}
+
+impl From<UpdateTodoRaw> for UpdateTodo {
+    fn from(value: UpdateTodoRaw) -> Self {
+        let done = match value.done.as_deref() {
+            Some("on") => true,
+            _ => false,
+        };
+
+        UpdateTodo {
+            name: value.name,
+            done,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, serde::Deserialize, serde::Serialize)]

@@ -8,6 +8,12 @@ pub(crate) struct TodoModel {
 }
 
 #[derive(Template)]
+#[template(path = "todos/edit.html")]
+pub(crate) struct EditTodoModel {
+    pub todo: TodoItem,
+}
+
+#[derive(Template)]
 #[template(path = "todos/todos.html")]
 pub(crate) struct TodoListModel {
     pub filter: String,

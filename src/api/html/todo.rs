@@ -11,8 +11,11 @@ pub fn router(state: &sqlx::SqlitePool) -> Router<sqlx::SqlitePool> {
         .route("/all", routing::get(self::get::all))
         .route(
             "/:id",
-            routing::get(self::get::all).delete(self::delete::delete),
+            routing::get(self::get::all)
+                .delete(self::delete::delete)
+                .patch(self::patch::update),
         )
+        .route("/:id/edit", routing::get(self::get::edit))
         .route("/:id/toggle", routing::put(self::put::toggle_state))
 }
 
@@ -65,6 +68,15 @@ mod get {
         let todo = models::todo::get_by_id(&pool, id).await?;
         Ok(viewmodels::todos::TodoModel { todo })
     }
+
+    pub async fn edit(
+        Path(id): Path<i64>,
+        State(pool): State<sqlx::SqlitePool>,
+    ) -> Result<impl IntoResponse, ApiError> {
+        let todo = models::todo::get_by_id(&pool, id).await?;
+
+        Ok(viewmodels::todos::EditTodoModel { todo })
+    }
 }
 
 mod post {
@@ -116,5 +128,29 @@ mod delete {
             .await
             .map(|_| StatusCode::OK)
             .map_err(|e| e.into())
+    }
+}
+
+mod patch {
+    use askama_axum::IntoResponse;
+    use axum::{
+        extract::{Path, State},
+        Form,
+    };
+
+    use crate::{
+        api::types::todo::{UpdateTodo, UpdateTodoRaw},
+        error::ApiError,
+        models, viewmodels,
+    };
+
+    pub async fn update(
+        Path(id): Path<i64>,
+        State(pool): State<sqlx::SqlitePool>,
+        Form(payload): Form<UpdateTodoRaw>,
+    ) -> Result<impl IntoResponse, ApiError> {
+        let _ = models::todo::update(&pool, id, &payload.into()).await?;
+        let todo = models::todo::get_by_id(&pool, id).await?;
+        Ok(viewmodels::todos::TodoModel { todo })
     }
 }

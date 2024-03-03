@@ -1,0 +1,29 @@
+<tr id="shuttle-todo-{{todo.id}}">
+      <form hx-patch="/todos/{{todo.id}}" hx-target="#shuttle-todo-{{todo.id}}" hx-swap="outerHTML">
+        <td>
+        <input
+            type="checkbox"
+            name="done"
+            {% if todo.done %} checked {% endif %}
+        >
+        </input>
+        </td>
+        <td><input name="name" type="text" value="{{todo.name}}"></input>
+        </td>
+    <td>
+    <fieldset role="group">
+      <button class="outline"
+          hx-get="/todos/{{todo.id}}"
+          hx-target="#shuttle-todo-{{todo.id}}"
+          hx-swap="outerHTML"
+          hx-sync="closest form:drop"
+      >
+          Cancel
+      </button>
+      <input type="submit" value="OK"></input>
+      </fieldset>
+    </td>
+    </form>
+</tr>
+
+
