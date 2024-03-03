@@ -3,7 +3,7 @@
         <td>
         <input
             type="checkbox"
-            hx-post="/todos/{{todo.id}}/toggle"
+            hx-put="/todos/{{todo.id}}/toggle"
             hx-trigger="click"
             hx-target="#shuttle-todo-{{todo.id}}"
             hx-swap="outerHTML"

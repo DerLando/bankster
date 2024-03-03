@@ -9,7 +9,7 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             backup_dir: "./".to_string(),
-            assets_dir: "./appserver/assets".to_string(),
+            assets_dir: "./assets".to_string(),
         }
     }
 }

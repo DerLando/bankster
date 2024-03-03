@@ -8,70 +8,46 @@ use axum::{
     routing::{delete, get, post, put},
     Json, Router,
 };
-use axum_extra::response::Css;
 use serde::{Deserialize, Serialize};
 use sqlx::{
     sqlite::{SqliteConnectOptions, SqlitePoolOptions},
     ConnectOptions,
 };
-use templates::{LoginIndex, TodoIndex};
 use tokio::io::AsyncReadExt;
-use tower_http::services::{ServeDir, ServeFile};
+use tower_http::services::ServeDir;
+mod api;
 mod config;
-pub(crate) mod controllers;
+// mod controllers;
 mod data;
 mod error;
-mod templates;
+mod models;
+mod viewmodels;
 
 const DB_NAME: &str = "sqlite://data.db";
 // const DB_NAME: &str = "sqlite::memory:";
 
-enum CustomError {
-    TodoNotFound,
-    TableMissing(String),
-    ConfigParseError,
-}
-
-impl IntoResponse for CustomError {
-    fn into_response(self) -> axum::response::Response {
-        match self {
-            CustomError::TodoNotFound => {
-                (StatusCode::BAD_REQUEST, "Could not find Todo Item").into_response()
-            }
-            CustomError::TableMissing(why) => {
-                (StatusCode::INTERNAL_SERVER_ERROR, why).into_response()
-            }
-            CustomError::ConfigParseError => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                "Failed to parse config file",
-            )
-                .into_response(),
-        }
-    }
-}
-
-fn build_api_router(pool: sqlx::SqlitePool) -> Router {
-    Router::new()
-        // `POST /users` goes to `create_user`
-        .route("/users", post(create_user))
-        .route("/todo", post(controllers::create_todo))
-        .route("/todo/:id", get(controllers::read_todo))
-        .route("/todo/:id", put(controllers::update_todo))
-        .route("/todo/:id", delete(controllers::delete_todo))
-        .route("/todo", get(controllers::get_all_todos))
-        .route("/backup", get(save_backup))
-        .route("/tasks", get(controllers::task::get_all_tasks))
-        .route("/tasks", post(controllers::task::create_task))
-        .route("/tasks/:id", get(controllers::task::read_task))
-        .route("/tasks/:id", put(controllers::task::update_task))
-        .route("/tasks/:id", delete(controllers::task::delete_task))
-        .route("/tasks/:id/todos/:id", post(controllers::task::add_todo))
-        .route(
-            "/tasks/:id/todos/:id",
-            delete(controllers::task::remove_todo),
-        )
-        .with_state(pool)
-}
+// fn build_api_router(pool: sqlx::SqlitePool) -> Router {
+//     Router::new()
+//         // `POST /users` goes to `create_user`
+//         .route("/users", post(create_user))
+//         .route("/todo", post(controllers::create_todo))
+//         .route("/todo/:id", get(controllers::read_todo))
+//         .route("/todo/:id", put(controllers::update_todo))
+//         .route("/todo/:id", delete(controllers::delete_todo))
+//         .route("/todo", get(controllers::get_all_todos))
+//         .route("/backup", get(save_backup))
+//         .route("/tasks", get(controllers::task::get_all_tasks))
+//         .route("/tasks", post(controllers::task::create_task))
+//         .route("/tasks/:id", get(controllers::task::read_task))
+//         .route("/tasks/:id", put(controllers::task::update_task))
+//         .route("/tasks/:id", delete(controllers::task::delete_task))
+//         .route("/tasks/:id/todos/:id", post(controllers::task::add_todo))
+//         .route(
+//             "/tasks/:id/todos/:id",
+//             delete(controllers::task::remove_todo),
+//         )
+//         .with_state(pool)
+// }
 
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
@@ -104,28 +80,17 @@ async fn main() -> Result<(), sqlx::Error> {
     let app = Router::new()
         // `GET /` goes to `root`
         .route("/", get(root))
-        .route(
-            "/todos",
-            post(controllers::todo::create_todo_from_form).get(controllers::todo::get_todos_list),
-        )
-        .route("/todos/:id", delete(controllers::todo::delete_todo))
-        .route(
-            "/todos/:id/toggle",
-            post(controllers::todo::toggle_todo_state),
-        )
-        .route(
-            "/todos/filter/:filter",
-            get(controllers::todo::get_filtered_todos),
-        )
         .route("/login", get(login))
-        // .route("/assets/styles.css", get(style))
+        // .nest(
+        //     controllers::task::html_api::NEST_PREFIX,
+        //     controllers::task::html_api::router(pool.clone()),
+        // )
         .nest(
-            controllers::task::html_api::NEST_PREFIX,
-            controllers::task::html_api::router(pool.clone()),
+            api::html::todo::NEST_PREFIX,
+            api::html::todo::router(&pool.clone()),
         )
         .with_state(pool.clone())
-        .nest("/api", build_api_router(pool))
-        // workspace has the packages nested from the root, so we need to specify 'appserver/assets'
+        // .nest("/api", build_api_router(pool))
         .nest_service("/assets", ServeDir::new(config.assets_dir))
         .layer(tower_http::trace::TraceLayer::new_for_http())
         .layer(cors);
@@ -159,7 +124,7 @@ async fn root() -> impl IntoResponse {
 }
 
 async fn login() -> impl IntoResponse {
-    LoginIndex
+    viewmodels::LoginIndex
 }
 
 async fn read_config() -> config::Config {

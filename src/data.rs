@@ -1,6 +1,7 @@
-use paste::paste;
 use sqlx::types::chrono::{TimeZone, Utc};
 use sqlx::Row;
+
+// TODO: data module is kind of awkward, as it's functioniality is repeated somewhat in the models module. Maybe this should be data_access, and models use methods in here?
 
 pub(crate) trait TableRow {
     type Data;
@@ -62,69 +63,6 @@ pub(crate) type DateTime = sqlx::types::chrono::DateTime<sqlx::types::chrono::Ut
 pub(crate) fn now() -> DateTime {
     Utc::now()
 }
-// macro_rules! make_row {
-//     ($col_name:ident , $col_type_inner:ident) => {
-//         format!("{} {},", stringify!($col_name), stringify!($col_type_inner))
-//     }
-// }
-
-// // TODO: Make a function to create the query string???
-// macro_rules! make_data_table {
-//     ($name:ident $(, $col_name:ident : $col_type:ty : $col_type_inner: ident)*) => {
-//         paste! {
-
-//         pub(crate) type [<$name:upper Row>] = (
-//                 i64, // id
-//                 $(
-//                     $col_type ,
-//                 )*
-//             );
-
-//         pub(crate) type [<$name:upper Data>] = (
-//                 $(
-//                     $col_type
-//                 )*
-//             );
-
-//         pub(crate) async fn [<create_ $name _table>](pool: &sqlx::SqlitePool) -> Result<(), sqlx::Error> {
-//         let mut query = format!(r#"
-//         CREATE TABLE IF NOT EXISTS {}
-//         (
-//             id INTEGER PRIMARY KEY NOT NULL,
-
-//     "#, $name);
-
-//         $(
-//         query.push_str(&make_row!($col_name, $col_type_inner));
-
-//         )*
-//         let mut query = query.chars();
-//                 query.next_back();
-//         let mut query = query.as_str().to_string();
-//         query.push(';');
-//         query.push(')');
-//         query.push(';');
-
-//         sqlx::query(&query).execute(pool).await.map(|_| ())
-//     }
-
-//             pub(crate) async fn [<select_ $name _row>](id: i64, pool: &sqlx::SqlitePool) -> Result<[<$name:upper Row>], sqlx::Error> {
-
-//                 sqlx::query(&format!("SELECT * from {} WHERE id = (?1)", $name)).bind(id).map(|row: sqlx::sqlite::SqliteRow| {
-//                     (
-//                         row.get("id"),
-//                         $(
-//                 row.get($col_name),
-//             )*
-//                     )
-//                 }).fetch_one(pool).await
-//             }
-//     }
-//     };
-// }
-
-// const documents: &str = "documents";
-// make_data_table!(documents, filename : String : TEXT, data : Vec<u8> : BLOB);
 
 pub(crate) async fn create_todo_table(pool: &sqlx::SqlitePool) {
     sqlx::query(

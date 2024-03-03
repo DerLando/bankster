@@ -11,7 +11,6 @@ use axum::{
     Form, Json,
 };
 use axum_extra::extract::WithRejection;
-use piapi_rs::types::todo::TodoItem;
 use thiserror::Error;
 
 pub(crate) trait TodoApiController {}

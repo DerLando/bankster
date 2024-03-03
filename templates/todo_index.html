@@ -2,29 +2,48 @@
 
 {% block head %}
 
-<header class="card">
-  <h1>TODO</h1>
-  <button id="theme-switcher">
-  ☾☼
-  </button>
+<header class="container">
+  {% include "nav.html" %}
+  <h1>Todos</h1>
 </header>
 
 {% endblock %}
 
 {% block content %}
-<main>
-  <div class="card add">
   <form id="add-form" hx-on::after-request=" if(event.detail.successful) this.reset()">
-  <div class="cb-container">
-      <button hx-post="/todos" hx-trigger="click" hx-target="#todos-content" hx-swap="beforeend">+</button>
-  </div>
-  <div class="txt-container">
-      <input placeholder="Your todo description..." required type=text name="name" class="txt-input">
-  </div>
+    <fieldset role="group">
+        <input placeholder="Your todo description..." required type=text name="name">
+        <button 
+          hx-post="/todos"
+          hx-trigger="click"
+          hx-target="#todos-content"
+          hx-swap="beforeend">
+          +
+        </button>
+    </fieldset>
   </form>
+      <fieldset role="group">
+        <button id="all"
+          hx-get="/todos/find?"
+          hx-swap="outerHTML"
+          hx-target="#todos">
+            All
+          </button>
+        <button id="active"
+          hx-get="/todos/find?done=false"
+          hx-swap="outerHTML"
+          hx-target="#todos">
+           Active
+        </button>
+        <button id="completed" 
+          hx-get="/todos/find?done=true"
+          hx-swap="outerHTML"
+          hx-target="#todos">
+           Completed
+        </button>
+      </fieldset>
+  <hr>
+  <div id="list" hx-get="/todos/all" hx-target="this" hx-trigger="load" hx-swap="outerHTML">
+    <span aria-busy="true">Loading...</span>
   </div>
-  <div id="list" hx-get="/todos/filter/{{filter}}" hx-target="this" hx-trigger="load" hx-swap="outerHTML">
-      Loading...
-  </div>
-</main>
 {% endblock %}

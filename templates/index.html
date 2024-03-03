@@ -5,46 +5,11 @@
 
 <header class="container-fluid">
   {% include "nav.html" %}
-  <h1>TODO</h1>
+  <h1>Bankster</h1>
 </header>
 
 {% endblock %}
 
 {% block content %}
-  <form id="add-form" hx-on::after-request=" if(event.detail.successful) this.reset()">
-    <fieldset role="group">
-        <input placeholder="Your todo description..." required type=text name="name">
-        <button 
-          hx-post="/todos"
-          hx-trigger="click"
-          hx-target="#todos-content"
-          hx-swap="beforeend">
-          +
-        </button>
-    </fieldset>
-  </form>
-      <fieldset role="group">
-        <button id="all"
-          hx-get="/todos/filter/all"
-          hx-swap="outerHTML"
-          hx-target="#todos">
-            All
-          </button>
-        <button id="active"
-          hx-get="/todos/filter/active"
-          hx-swap="outerHTML"
-          hx-target="#todos">
-           Active
-        </button>
-        <button id="completed" 
-          hx-get="/todos/filter/completed"
-          hx-swap="outerHTML"
-          hx-target="#todos">
-           Completed
-        </button>
-      </fieldset>
-  <hr>
-  <div id="todos" hx-get="/todos/filter/all" hx-target="this" hx-trigger="load" hx-swap="outerHTML">
-      Loading...
-  </div>
+<p>Hello, welcome to <emph>bankster</emph></p>
 {% endblock %}
