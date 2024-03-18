@@ -21,7 +21,7 @@
     <footer>
         <label htmlFor="due">Due</label>
         <p>{{task.due}}</p>
-    <button>Edit</button>
+    <button hx-get="/tasks/{{task.id}}/edit" hx.target="closest dialog" hx-swap="outerHTML">Edit</button>
     </footer>
   </article>
 </dialog>

@@ -1,4 +1,4 @@
-// mod tasks;
+pub mod tasks;
 pub mod todos;
 
 use askama::Template;

@@ -3,7 +3,7 @@ pub struct TaskHeaders {
     pub tasks: Vec<TaskHeader>,
 }
 
-#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize, sqlx::FromRow)]
 pub struct TaskHeader {
     pub id: i64,
     pub name: String,

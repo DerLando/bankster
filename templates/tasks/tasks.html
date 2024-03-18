@@ -10,16 +10,16 @@
           <td>{{ task_header.name }}</td>
           <td>
             <button
-              hx-get="/tasks/{{task_header.id}}"
-              hx-target="#edit-dialog"
+              hx-get="/tasks/{{task_header.id}}/details"
+              hx-target="#task-dialog"
               hx-swap="outerHTML"
-            >Edit</button>
+            >Details</button>
               </td>
               </tr>
           {% endfor %}
   </table>
     <p>{{ tasks.len() }} tasks</p>
-  <div id="edit-dialog"></div>
+  <div id="task-dialog"></div>
 </div>
 
 

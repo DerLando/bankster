@@ -16,7 +16,7 @@
     {% if todo.done %} <s> {{ todo.name }} </s> {% else %} {{ todo.name }} {% endif %}
         </td>
     <td>
-    <div>
+    <fieldset role="group">
       <button class="outline"
           aria-invalid="true"
           hx-delete="/todos/{{todo.id}}"
@@ -33,7 +33,7 @@
       >
           Edit
       </button>
-    </div>
+    </fieldset>
     </td>
 </tr>
 

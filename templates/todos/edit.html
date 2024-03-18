@@ -12,6 +12,7 @@
         </td>
     <td>
     <fieldset role="group">
+    <!-- TODO: There is a bug in chrome here, ff works... -->
       <button class="outline"
           hx-get="/todos/{{todo.id}}"
           hx-target="#shuttle-todo-{{todo.id}}"
@@ -25,5 +26,4 @@
     </td>
     </form>
 </tr>
-
 

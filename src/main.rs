@@ -19,6 +19,7 @@ mod api;
 mod config;
 // mod controllers;
 mod data;
+mod data_access;
 mod error;
 mod models;
 mod viewmodels;
@@ -81,13 +82,13 @@ async fn main() -> Result<(), sqlx::Error> {
         // `GET /` goes to `root`
         .route("/", get(root))
         .route("/login", get(login))
-        // .nest(
-        //     controllers::task::html_api::NEST_PREFIX,
-        //     controllers::task::html_api::router(pool.clone()),
-        // )
         .nest(
             api::html::todo::NEST_PREFIX,
             api::html::todo::router(&pool.clone()),
+        )
+        .nest(
+            api::html::task::NEST_PREFIX,
+            api::html::task::router(pool.clone()),
         )
         .with_state(pool.clone())
         // .nest("/api", build_api_router(pool))

@@ -1,17 +1,24 @@
+use crate::api::types::task::{TaskHeader, TaskModel};
 use askama::Template;
-use piapi_rs::types::{task::TaskHeader, todo::TodoItem};
+
 #[derive(Template)]
-#[template(path = "task_index.html")]
+#[template(path = "tasks/index.html")]
 pub(crate) struct TaskIndex;
 
 #[derive(Template)]
-#[template(path = "tasks.html")]
+#[template(path = "tasks/tasks.html")]
 pub(crate) struct Tasks {
-    pub tasks: Vec<crate::controllers::task::TaskHeader>,
+    pub tasks: Vec<TaskHeader>,
 }
 
 #[derive(Template)]
 #[template(path = "tasks/edit.html")]
 pub(crate) struct TaskEdit {
-    pub task: crate::controllers::task::TaskModel,
+    pub task: TaskModel,
+}
+
+#[derive(Template)]
+#[template(path = "tasks/details.html")]
+pub(crate) struct TaskDetails {
+    pub task: TaskModel,
 }
